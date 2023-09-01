@@ -1,6 +1,6 @@
 # mem_pool: Efficient Fixed-Size Memory Pool in C
 
-A simple, efficient, and thread-safe memory pool implemented in C for fast fixed-size block allocations and deallocations. Based on the publication [Fast Efficient Fixed-Size Memory Pool: No Loops and No Overhead](http://www.thinkmind.org/index.php?view=article&articleid=computation_tools_2012_1_10_80006).
+A simple and efficient memory pool implemented in C for fast fixed-size block allocations and deallocations. Based on the publication [Fast Efficient Fixed-Size Memory Pool: No Loops and No Overhead](http://www.thinkmind.org/index.php?view=article&articleid=computation_tools_2012_1_10_80006).
 
 ## 📝 Table of Contents
 
@@ -35,6 +35,7 @@ A simple, efficient, and thread-safe memory pool implemented in C for fast fixed
 
 (TODO: Showcase a few simple examples of how the library is used in practice.)
 
-## 🤝 Contributing
+## 👥 Contribution
+Contributions to any code here are more than welcome, since it's only the beginning of the project!
 
-(TODO: Information on how others can contribute to the project.)
+Note: This project is a work-in-progress. Feedback, suggestions, and contributions are highly appreciated.
