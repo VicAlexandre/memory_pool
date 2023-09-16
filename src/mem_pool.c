@@ -1,46 +1,51 @@
 #include "mem_pool.h"
 
-pool create_pool(size_t block_size, unsigned int num_blocks)
+Pool *create_pool(size_t block_size, uint16_t num_blocks)
 {
-    pool new_pool = {
-        .num_blocks = num_blocks,
-        .block_size = block_size,
-        .num_free_blocks = num_blocks,
-        .num_initialized_blocks = 0,
-        .pool_start = malloc(block_size * num_blocks),
-        .next = new_pool.pool_start,
-    };
+    size_t total_size = sizeof(Pool) + block_size * num_blocks;
+
+    Pool *new_pool = (Pool *)malloc(total_size);
+    if (!new_pool)
+        return NULL;
+
+    new_pool->num_blocks = num_blocks;
+    new_pool->block_size = block_size;
+    new_pool->num_free_blocks = num_blocks;
+    new_pool->num_initialized_blocks = 0;
+    new_pool->pool_start = (unsigned char *)new_pool + sizeof(Pool);
+    new_pool->next = (unsigned char *)new_pool + sizeof(Pool);
 
     return new_pool;
 }
 
-extern void destroy_pool(pool *p)
+void destroy_pool(Pool *p)
 {
-    free(p->pool_start);
-    p->pool_start = NULL;
+    if (p != NULL)
+        free(p);
 }
 
-unsigned char *addr_from_index(pool *p, unsigned int index)
+static unsigned char *addr_from_index(Pool *p, uint16_t index)
 {
     return p->pool_start + (index * p->block_size);
 }
 
-unsigned int index_from_addr(pool *p, unsigned char *addr)
+static uint16_t index_from_addr(Pool *p, unsigned char *addr)
 {
-    return (unsigned int)(addr - p->pool_start) / p->block_size;
+    return (uint16_t)(addr - p->pool_start) / p->block_size;
 }
 
-void *alloc(pool *p)
+void *alloc(Pool *p)
 {
     // If the pool is not full, initialize the next block.
     if (p->num_initialized_blocks < p->num_blocks)
     {
-        unsigned int *ptr = (unsigned int *)addr_from_index(p, p->num_initialized_blocks);
+        uint16_t *ptr = (uint16_t *)addr_from_index(p, p->num_initialized_blocks);
         *ptr = p->num_initialized_blocks + 1;
         p->num_initialized_blocks++;
     }
 
     // If there are free blocks, return the next free block.
+
     void *ret = NULL;
     if (p->num_free_blocks > 0)
     {
@@ -48,7 +53,7 @@ void *alloc(pool *p)
         p->num_free_blocks--;
         // If there are more free blocks, set the next free block to the next block.
         if (p->num_free_blocks > 0)
-            p->next = addr_from_index(p, *(unsigned int *)p->next);
+            p->next = addr_from_index(p, *(uint16_t *)p->next);
         // If there are no more free blocks, set the next free block to NULL.
         else
             p->next = NULL;
@@ -56,19 +61,23 @@ void *alloc(pool *p)
     return ret;
 }
 
-void dealloc(pool *p, void *ptr)
+void dealloc(Pool *p, void *ptr)
 {
+    if (ptr == NULL)
+        return;
+
     // If there are no free blocks, set the next free block to the given block.
-    if (p->next == NULL)
-    {
-        *(unsigned int *)ptr = index_from_addr(p, p->next);
-        p->next = (unsigned char *)ptr;
-    }
     // If there are free blocks, set the next free block to the given block
     // and set the next block to the previous next free block.
+
+    if (p->next != NULL)
+    {
+        *(uint16_t *)ptr = index_from_addr(p, p->next);
+        p->next = (unsigned char *)ptr;
+    }
     else
     {
-        *(unsigned int *)ptr = index_from_addr(p, p->next);
+        *(uint16_t *)ptr = p->num_blocks;
         p->next = (unsigned char *)ptr;
     }
     p->num_free_blocks++;

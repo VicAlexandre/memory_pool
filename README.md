@@ -33,9 +33,8 @@ A simple and efficient memory pool implemented in C for fast fixed-size block al
 
 ## 📖 Examples
 
-(TODO: Showcase a few simple examples of how the library is used in practice.)
+Includes a sample program that uses the library to allocate and deallocate memory blocks of different sizes. More examples will be added soon.
 
 ## 👥 Contribution
-Contributions to any code here are more than welcome, since it's only the beginning of the project!
 
-Note: This project is a work-in-progress. Feedback, suggestions, and contributions are highly appreciated.
+This project is a work-in-progress. Feedback, suggestions, and contributions are highly appreciated.
