@@ -1,3 +1,9 @@
+// A memory pool implementation based off of Ben Kenwright's article:
+// Fast Efficient Fixed-Size Memory Pool: No Loops and No Overhead
+// (http://www.thinkmind.org/index.php?view=article&articleid=computation_tools_2012_1_10_80006)
+//
+// Written by: Victor A. Miranda - GitHub: @VicAlexandre
+
 #ifndef MEMPOOL
 #define MEMPOOL
 
